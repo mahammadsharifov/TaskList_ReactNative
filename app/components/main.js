@@ -7,7 +7,7 @@ import {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { AppLoading, Font } from 'expo';
 
 export default class Main extends React.Component {
@@ -68,7 +68,8 @@ export default class Main extends React.Component {
                     <Text style={styles.noteText}>{val.date}</Text>
                     <Text style={styles.noteText}>{val.note}</Text>
                     <TouchableOpacity onPress={() => this.deleteNote(key)} style={styles.noteDelete}>
-                        <Text style={styles.noteDeleteText}> DEL </Text>
+                        {/* <Text style={styles.noteDeleteText}> DEL </Text> */}
+                        <Icon name="times" size={20} color="#3FE0D0" />
                     </TouchableOpacity>
                 </View>
             )
@@ -78,7 +79,7 @@ export default class Main extends React.Component {
             <View style={styles.container}>
 
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>TASK LIST APP</Text>
+                    <Text style={styles.headerText}>TASK LIST</Text>
                 </View>
 
                 <ScrollView style={styles.scrollContainer}>
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     noteLine: {
         paddingTop: 8,
         paddingBottom: 8,
-        borderBottomColor: '#3FE0D0',
+        borderBottomColor: '#00999b',
         borderStyle: 'dotted',
         borderRadius: 1,
         borderBottomWidth: 1
