@@ -1,6 +1,5 @@
 // Task List App by (c) Mahammad Sharifov
-// Using Functional based component. Custom Fonts included
-
+// Using Hook (Functional based)
 import React, {useState} from 'react';
 import {
     StyleSheet,
@@ -10,26 +9,8 @@ import {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
-import AppLoading from 'expo-app-loading';
-import {
-    useFonts,
-    Poppins_300Light,
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_700Bold
-  } from "@expo-google-fonts/poppins";
-
-import Icon from 'react-native-vector-icons/FontAwesome';
-
 
 const App = () => {
-
-    let [fontsLoaded] = useFonts({
-        "Poppins-Light": Poppins_300Light,
-        "Poppins-Regular": Poppins_400Regular,
-        "Poppins-Medium": Poppins_500Medium,
-        "Poppins-Bold": Poppins_700Bold
-      });
 
     const [noteText, setNoteText] = useState('')
     const [noteArray, setNoteArray] = useState([])
@@ -59,43 +40,38 @@ const App = () => {
                 <Text style={styles.noteText}>{val.date}</Text>
                 <Text style={styles.noteText}>{val.note}</Text>
                 <TouchableOpacity onPress={ ()=> deleteNote(index) } style={styles.noteDelete}>
-                    {/* <Text style={styles.noteDeleteText}> DEL </Text> */}
-                    <Icon name="times" size={20} color="#3FE0D0" />
+                    <Text style={styles.noteDeleteText}> DEL </Text>
                 </TouchableOpacity>
             </View>
         )
     } )       
 
-    if(fontsLoaded){
-        return (
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>TASK LIST</Text>
-                </View>
+    return (
+        <View style={styles.container}>
 
-                <ScrollView style={styles.scrollContainer}>
-                    {notes}
-                </ScrollView>
-
-                <View style={styles.footer}>
-                    <TextInput
-                        style={styles.textInput}
-                        value = {noteText}
-                        onChangeText = { (noteText) => setNoteText(noteText) }
-                        placeholder='Task name ...'
-                        underlineColorAndroid='transparent'>
-                    </TextInput>
-                    <TouchableOpacity  onPress = { () => addTask() } style={styles.addButton}>
-                        <Text style={styles.addButtonText}>ADD TASK</Text>
-                    </TouchableOpacity>
-                </View>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>TASK LIST</Text>
             </View>
-        )
-    } else {
-        return(
-            <AppLoading />
-        )
-    }
+
+            <ScrollView style={styles.scrollContainer}>
+                {notes}
+            </ScrollView>
+
+            <View style={styles.footer}>
+                <TextInput
+                    style={styles.textInput}
+                    value = {noteText}
+                    onChangeText = { (noteText) => setNoteText(noteText) }
+                    placeholder='Task name ...'
+                    underlineColorAndroid='transparent'>
+                </TextInput>
+                <TouchableOpacity  onPress = { () => addTask() } style={styles.addButton}>
+                    <Text style={styles.addButtonText}>ADD TASK</Text>
+                </TouchableOpacity>
+            </View>
+
+        </View>
+    );
 
 }
 
@@ -103,7 +79,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#008081',
-        fontFamily: 'Poppins-Light'
+        fontFamily: 'PoppinsLight'
     },
     header: {
         backgroundColor: '#008081',
@@ -114,9 +90,9 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: 'white',
-        fontSize: 20,
-        padding: 15,       
-        fontFamily: 'Poppins-Medium'
+        fontSize: 16,
+        fontWeight: 'bold',
+        padding: 15
     },
     scrollContainer: {
         flex: 1,
@@ -142,8 +118,7 @@ const styles = StyleSheet.create({
     textInput: {
         alignSelf: 'stretch',
         padding: 10,
-        backgroundColor: 'white',
-        fontFamily: 'Poppins-Light'
+        backgroundColor: 'white'
     },
     addButton: {
         backgroundColor: '#3FE0D0',
@@ -153,7 +128,7 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         color: '#008081',
-        fontFamily: 'Poppins-Medium'
+        fontWeight: 'bold'
     },
     note: {
         position: 'relative',
@@ -162,9 +137,7 @@ const styles = StyleSheet.create({
     },
     noteText: {
         paddingLeft: 10,
-        fontSize: 15,
-        color: 'white',
-        fontFamily: 'Poppins-Light'
+        color: 'white'
     },
     noteDelete: {
         position: 'absolute',

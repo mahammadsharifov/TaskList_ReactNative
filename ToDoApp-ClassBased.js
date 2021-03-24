@@ -1,7 +1,6 @@
 // Task List App by (c) Mahammad Sharifov
-// Using Functional based component. Custom Fonts included
-
-import React, {useState} from 'react';
+// Using Class based component
+import React from 'react';
 import {
     StyleSheet,
     Text,
@@ -10,65 +9,77 @@ import {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
-import AppLoading from 'expo-app-loading';
-import {
-    useFonts,
-    Poppins_300Light,
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_700Bold
-  } from "@expo-google-fonts/poppins";
-
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AppLoading, Font } from 'expo';
 
+export default class App extends React.Component {
 
-const App = () => {
+    constructor(props) {
+        super(props);
 
-    let [fontsLoaded] = useFonts({
-        "Poppins-Light": Poppins_300Light,
-        "Poppins-Regular": Poppins_400Regular,
-        "Poppins-Medium": Poppins_500Medium,
-        "Poppins-Bold": Poppins_700Bold
-      });
-
-    const [noteText, setNoteText] = useState('')
-    const [noteArray, setNoteArray] = useState([])
-
-    const addTask = () => {
-        if(noteText){
-            var date = new Date();
-            noteArray.push({
-               'date' :
-               new Date().toLocaleString('en-US', { day: '2-digit', month: 'short', hour: 'numeric', minute: 'numeric', hour12: true }),
-               'note' : noteText
-            });
-            setNoteArray(noteArray);
-            setNoteText("");
+        this.state = {
+            noteArray: [],
+            noteText: '',
+            //fontLoaded: false
         }
     }
 
-    const deleteNote = (index) => {
-        let ArrayCopy = [...noteArray]
-        ArrayCopy.splice(index, 1);
-        setNoteArray(ArrayCopy)
+    // componentWillMount() {
+    //     this._loadAssetsAsync();
+    //   }
+ 
+    // _loadAssetsAsync = async () => {
+    // await Font.loadAsync({
+    //     PoppinsLight: require("./assets/fonts/poppins-light.ttf"),
+    // });
+    // this.setState({ fontLoaded: true });
+    // };
+
+    addTask() {
+        const {noteText, noteArray} = this.state
+
+        if (noteText) {
+            var date = new Date();
+
+            noteArray.push({ 
+               'date' : 
+               date.getDate() + '/' +
+               (date.getMonth() + 1) + '/' +
+               date.getFullYear(),
+               'note' : noteText
+            });
+
+            this.setState({noteArray: noteArray});
+            this.setState({noteText: ''});
+        }
     }
 
-    let notes = noteArray.map( (val, index) =>{
-        return(
-            <View key={index} val={val} style={styles.noteLine}>
-                <Text style={styles.noteText}>{val.date}</Text>
-                <Text style={styles.noteText}>{val.note}</Text>
-                <TouchableOpacity onPress={ ()=> deleteNote(index) } style={styles.noteDelete}>
-                    {/* <Text style={styles.noteDeleteText}> DEL </Text> */}
-                    <Icon name="times" size={20} color="#3FE0D0" />
-                </TouchableOpacity>
-            </View>
-        )
-    } )       
+    deleteNote(index){
+        const {noteText, noteArray} = this.state
+        noteArray.splice(index, 1);
+        this.setState({noteArray: noteArray});
+    }
 
-    if(fontsLoaded){
+    render() {
+        // if (!this.state.fontLoaded) {
+        //     return <AppLoading />;
+        //   }
+        let notes = this.state.noteArray.map((val, index) => {
+            return (
+                <View index={index} val={val} style={styles.noteLine}>
+                    <Text style={styles.noteText}>{val.date}</Text>
+                    <Text style={styles.noteText}>{val.note}</Text>
+                    <TouchableOpacity onPress={() => this.deleteNote(index)} style={styles.noteDelete}>
+                        {/* <Text style={styles.noteDeleteText}> DEL </Text> */}
+                        <Icon name="times" size={20} color="#3FE0D0" />
+                    </TouchableOpacity>
+                </View>
+            )
+        })
+
         return (
             <View style={styles.container}>
+
                 <View style={styles.header}>
                     <Text style={styles.headerText}>TASK LIST</Text>
                 </View>
@@ -80,21 +91,18 @@ const App = () => {
                 <View style={styles.footer}>
                     <TextInput
                         style={styles.textInput}
-                        value = {noteText}
-                        onChangeText = { (noteText) => setNoteText(noteText) }
+                        onChangeText={(noteText) => this.setState({ noteText })}
+                        value={this.state.noteText}
                         placeholder='Task name ...'
                         underlineColorAndroid='transparent'>
                     </TextInput>
-                    <TouchableOpacity  onPress = { () => addTask() } style={styles.addButton}>
+                    <TouchableOpacity onPress={() => this.addTask()} style={styles.addButton}>
                         <Text style={styles.addButtonText}>ADD TASK</Text>
                     </TouchableOpacity>
                 </View>
+
             </View>
-        )
-    } else {
-        return(
-            <AppLoading />
-        )
+        );
     }
 
 }
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#008081',
-        fontFamily: 'Poppins-Light'
+        fontFamily: 'PoppinsLight'
     },
     header: {
         backgroundColor: '#008081',
@@ -114,9 +122,9 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: 'white',
-        fontSize: 20,
-        padding: 15,       
-        fontFamily: 'Poppins-Medium'
+        fontSize: 16,
+        fontWeight: 'bold',
+        padding: 15
     },
     scrollContainer: {
         flex: 1,
@@ -142,8 +150,7 @@ const styles = StyleSheet.create({
     textInput: {
         alignSelf: 'stretch',
         padding: 10,
-        backgroundColor: 'white',
-        fontFamily: 'Poppins-Light'
+        backgroundColor: 'white'
     },
     addButton: {
         backgroundColor: '#3FE0D0',
@@ -153,7 +160,7 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         color: '#008081',
-        fontFamily: 'Poppins-Medium'
+        fontWeight: 'bold'
     },
     note: {
         position: 'relative',
@@ -162,9 +169,7 @@ const styles = StyleSheet.create({
     },
     noteText: {
         paddingLeft: 10,
-        fontSize: 15,
-        color: 'white',
-        fontFamily: 'Poppins-Light'
+        color: 'white'
     },
     noteDelete: {
         position: 'absolute',
@@ -183,5 +188,3 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 });
-
-export default App;
